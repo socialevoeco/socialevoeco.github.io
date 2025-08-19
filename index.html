@@ -562,100 +562,8 @@
                        </ul>
                 `;
                 
-                // </div>
-                //    <div class="mt-6 grid grid-cols-2 gap-4">
-                //        <div>
-                //            <h4 class="font-semibold text-slate-800">Compliance:</h4>
-                //            <p class="mt-1 text-slate-600 text-sm">${platform.compliance}</p>
-                //        </div>
-                //        <div>
-                //            <h4 class="font-semibold text-slate-800">Cost Model:</h4>
-                //            <p class="mt-1 text-slate-600 text-sm">${platform.cost}</p>
-                //        </div>
-                //    </div>
-                
-                
                 // const chartContainer = document.querySelector('.chart-container'); chartContainer.innerHTML = `<img src="${platform.image}" alt="${platform.name}" class="w-[200px] rounded-lg border">`
                 const chartContainer = document.querySelector('.chart-container');
-
-                //<button id="toggle-image-btn" class="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                //  Toggle Image
-                //</button>
-
-                //
-                //chartContainer.innerHTML = `
-                //  <div class="flex flex-col items-center space-y-4">
-                //    <img id="platform-image" src="${platform.image1 || platform.image}" alt="${platform.name}" class="w-full h-[32rem] object-contain rounded-lg border">
-                //    ${platform.image2 ? `
-                //      <button id="toggle-image-btn" title="Toggle image" class="text-blue-600 hover:text-blue-800 text-4xl">
-                //         🔄
-                //      </button>
-                //    ` : ''}
-                //  </div>
-                //`;
-               
-                //toggleButton.addEventListener('click', () => {
-                //  showingAlt = !showingAlt;
-                //  imageElement.src = showingAlt ? platform.image2 : platform.image1;
-                
-                //if (platform.image2) {
-                //  const imageElement = document.getElementById('platform-image');
-                //  const toggleButton = document.getElementById('toggle-image-btn');
-                //  let showingAlt = false;
-                  
-                //  toggleButton.addEventListener('click', () => {
-                //  imageElement.src = showingAlt ? platform.image1 : platform.image2;
-                //  showingAlt = !showingAlt;
-                //  });
-                //}
-                //
-               
-                //chartContainer.innerHTML = `
-                //  <div class="flex flex-col items-center space-y-4">
-                //    <img id="platform-image" src="${platform.image1 || platform.image}" alt="${platform.name}" class="w-full h-[32rem] object-contain rounded-lg border">
-                //    ${platform.image2 ? `
-                //      <div class="flex space-x-4">
-                //        <button id="image-btn-1" class="px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium">1</button>
-                //        <button id="image-btn-2" class="px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium">2</button>
-                //      </div>
-                //    ` : ''}
-                //  </div>
-                //`;
-                
-                //if (platform.image2) {
-                //  const imageElement = document.getElementById('platform-image');
-                //  const btn1 = document.getElementById('image-btn-1');
-                //  const btn2 = document.getElementById('image-btn-2');
-                //
-                //  btn1.addEventListener('click', () => {
-                //    imageElement.src = platform.image1;
-                //  });
-                //
-                //  btn2.addEventListener('click', () => {
-                //    imageElement.src = platform.image2;
-                //  });
-                //}
-                
-                //const chartContainer = document.getElementById('platform-chart-container'); // or wherever you're injecting
-                //const imageKeys = Object.keys(platform).filter(k => k.startsWith('image'));
-                
-                //chartContainer.innerHTML = `
-                //  <div class="flex flex-col items-center space-y-4">
-                //    <img id="platform-image" src="${platform.image1}" alt="${platform.name}" class="w-full h-[32rem] object-contain rounded-lg border">
-                //    <div class="flex space-x-4">
-                //      ${imageKeys.map((k, i) => `
-               //         <button data-image="${platform[k]}" class="image-btn px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium">${i + 1}</button>
-               //       `).join('')}
-               //     </div>
-              //    </div>
-              //  `;
-
-                //const imageElement = document.getElementById('platform-image');
-                //document.querySelectorAll('.image-btn').forEach(button => {
-                //  button.addEventListener('click', () => {
-                //    imageElement.src = button.dataset.image;
-                //  });
-                //});
               
                 // Get all keys that start with "image" (image1, image2, image3, ...)
                 const imageKeys = Object.keys(platform).filter(k => k.startsWith('image'));
@@ -790,29 +698,31 @@
 
             // LINK FROM AREAS TO PUBLICATIONS
             function renderPublicationsWithTag(tag, shouldScroll = true) {
-                // Always re-render
-                renderPublications(tag);
+              // 1) Render cards
+              renderPublications(tag);
             
-                // Update button states
-                document.querySelectorAll('.pub-filter-btn').forEach(btn => {
-                    const isMatch = btn.dataset.type === tag;
-                    btn.classList.toggle('bg-blue-200', isMatch);
-                    btn.classList.toggle('text-blue-800', isMatch);
-                    btn.classList.toggle('bg-white', !isMatch);
-                    btn.classList.toggle('text-slate-600', !isMatch);
-                });
+              // 2) Reset all buttons to INACTIVE
+              document.querySelectorAll('.pub-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white', 'bg-blue-200', 'text-blue-800');
+                btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-blue-100');
+              });
             
-                // Optional: Scroll to section if requested
-                if (shouldScroll) {
-                    const section = document.getElementById('publications');
-                    if (section) section.scrollIntoView({ behavior: 'smooth' });
-                }
+              // 3) Activate the CURRENT button
+              const activeBtn = Array.from(document.querySelectorAll('.pub-filter-btn'))
+                .find(b => b.dataset.type === tag);
+              if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-blue-100');
+                activeBtn.classList.add('bg-blue-600', 'text-white');
+              }
             
-                // Update URL hash so re-clicking links works
-                const newHash = `#publications?filter=${encodeURIComponent(tag)}`;
-                history.replaceState(null, '', newHash);
+              // 4) Optional scroll
+              if (shouldScroll) {
+                document.getElementById('publications')?.scrollIntoView({ behavior: 'smooth' });
+              }
+            
+              // 5) Normalize URL
+              history.replaceState(null, '', `#publications?filter=${encodeURIComponent(tag)}`);
             }
-            
             // Handle filter button clicks
             pubFiltersContainer.addEventListener('click', (e) => {
                 if (e.target.matches('.pub-filter-btn')) {

@@ -826,20 +826,32 @@
                 }
             });
             
-            // Handle link-to-filter from other sections/pages
-            function applyFilterFromHash() {
-                const hash = window.location.hash;
-                if (hash.startsWith('#publications?filter=')) {
-                    const tag = decodeURIComponent(hash.split('=')[1]);
+            // Handle filter button clicks
+            pubFiltersContainer.addEventListener('click', (e) => {
+                if (e.target.matches('.pub-filter-btn')) {
+                    const tag = e.target.dataset.type;
                     renderPublicationsWithTag(tag);
-                } else {
-                    renderPublicationsWithTag('all', false); // default view
                 }
+            });
+            
+            // Handle link-to-filter from other sections/pages
+            function applyFilterFromHash({ scroll = false } = {}) {
+              let { hash } = window.location;
+            
+              if (hash.startsWith('#publications?filter=')) {
+                const tag = decodeURIComponent(hash.split('=')[1] || 'all');
+                renderPublicationsWithTag(tag, scroll);
+              } else {
+                renderPublicationsWithTag('all', false);
+              }
             }
             
-            window.addEventListener('load', applyFilterFromHash);
-            window.addEventListener('hashchange', applyFilterFromHash);
-
+            // On load: apply filter, NO SCROLL
+            window.addEventListener('load', () => applyFilterFromHash({ scroll: false }));
+            
+            // On hash change: apply filter and scroll (user intent)
+            window.addEventListener('hashchange', () => applyFilterFromHash({ scroll: true }));
+            
             const protocolStepper = document.getElementById('protocol-stepper');
             protocolData.forEach((step, index) => {
                 const stepItem = document.createElement('div');

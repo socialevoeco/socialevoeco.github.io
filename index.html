@@ -57,10 +57,10 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
-        .repository-card {
+        .publication-card {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-        .repository-card:hover {
+        .publication-card:hover {
              transform: scale(1.03);
              box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
@@ -88,7 +88,7 @@
                         <a href="#home" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Home</a>
                         <a href="#principles" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Research <br> themes</a>
                         <a href="#platforms" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Projects</a>
-                        <a href="#repositories" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Publications</a>
+                        <a href="#publications" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Publications</a>
                         <!-- New link -->
                         <a href="#pi" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">PI</a>
                         <a href="#protocol" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Courses and <br> prospective students</a>
@@ -111,7 +111,7 @@
                     <a href="#home" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Home</a>
                     <a href="#principles" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Research <br> areas</a>
                     <a href="#platforms" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Current <br> projects</a>
-                    <a href="#repositories" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Publications</a>
+                    <a href="#publications" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Publications</a>
                     <!-- New link -->
                     <a href="#pi" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">PI</a>
                     <a href="#protocol" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Courses and <br> prospective students</a>
@@ -163,15 +163,15 @@
             </div>
         </section>
 
-        <section id="repositories" class="py-20 md:py-24">
+        <section id="publications" class="py-20 md:py-24">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-8">
                     <h2 class="text-3xl font-bold text-slate-900">Publications</h2>
                     <p class="mt-4 max-w-3xl mx-auto text-slate-600">A complete list of publications can be found <a href="publications.html" class="text-blue-600 underline hover:text-blue-800">here</a>.</p>
                 </div>
-                <div class="flex justify-center flex-wrap gap-2 md:gap-4 mb-10" id="repo-filters">
+                <div class="flex justify-center flex-wrap gap-2 md:gap-4 mb-10" id="pub-filters">
                 </div>
-                <div id="repositories-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div id="publications-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 </div>
             </div>
         </section>
@@ -288,25 +288,25 @@
                     icon: '🐜',
                     title: 'Altruism',
                     short: 'Why should organisms sacrifice themselves to help others?',
-                    long: 'Altruism is a major evolutionary problem because it carries a fitness cost that places organisms at a disadvantage relative to more selfish individuals. Yet, altruism is a common behaviour across a wide range of taxa. My research investigates how environmental and individual heterogeneity influence the evolution of altruism.<br><a href="index.html#repositories?filter=altruism" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                    long: 'Altruism is a major evolutionary problem because it carries a fitness cost that places organisms at a disadvantage relative to more selfish individuals. Yet, altruism is a common behaviour across a wide range of taxa. My research investigates how environmental and individual heterogeneity influence the evolution of altruism.<br><a href="index.html#publications?filter=altruism" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
                 },
                 {
                     icon: '🦋',
                     title: 'Dispersal',
                     short: 'Why risk leaving home when staying seems safer?',
-                    long: 'Many organisms remain near their birthplace, benefiting from shelter and familiarity with their environment. Others, however, abandon these advantages and take the risks associated with dispersal. Our research seeks to uncover the conditions under which dispersal is favored by natural selection. We focus not only on ecological and environmental factors, but also on social factors such as group size and kinship.<br><a href="index.html#repositories?filter=dispersal" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                    long: 'Many organisms remain near their birthplace, benefiting from shelter and familiarity with their environment. Others, however, abandon these advantages and take the risks associated with dispersal. Our research seeks to uncover the conditions under which dispersal is favored by natural selection. We focus not only on ecological and environmental factors, but also on social factors such as group size and kinship.<br><a href="index.html#publications?filter=dispersal" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
                 },
                 {
                     icon: '♂️♀️',
                     title: 'Sex allocation',
                     short: 'When should parents favor boys, and when girls?',
-                    long: 'How do organisms decide how much to invest in sons versus daughters? What determines the optimal ratio? These are some of the key questions that sex allocation theory seeks to answer. While many species exhibit balanced sex ratios, nature offers numerous examples ranging from extremely female- to male-biased ratios. We are interested in how factors such as information use and individual quality influence the evolution of sex allocation strategies. <br><a href="index.html#repositories?filter=sex allocation" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                    long: 'How do organisms decide how much to invest in sons versus daughters? What determines the optimal ratio? These are some of the key questions that sex allocation theory seeks to answer. While many species exhibit balanced sex ratios, nature offers numerous examples ranging from extremely female- to male-biased ratios. We are interested in how factors such as information use and individual quality influence the evolution of sex allocation strategies. <br><a href="index.html#publications?filter=sex allocation" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
                 },
                 {
                     icon: '⌛',
                     title: 'Life history',
                     short: 'Why do some organisms live fast and die young?',
-                    long: 'Life history evolution is essential for understanding the reproductive schedules of organisms and life-history traits such as body size, fertility, survival, and lifespan. The life history evolution framework focuses on how different traits contribute to lifetime fitness, taking into account trade-offs in the allocation of resources among traits. We are particularly interested in how the social environment and ecological context shape life history evolution.<br><a href="index.html#repositories?filter=life history" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                    long: 'Life history evolution is essential for understanding the reproductive schedules of organisms and life-history traits such as body size, fertility, survival, and lifespan. The life history evolution framework focuses on how different traits contribute to lifetime fitness, taking into account trade-offs in the allocation of resources among traits. We are particularly interested in how the social environment and ecological context shape life history evolution.<br><a href="index.html#publications?filter=life history" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
                 }
             ];
 
@@ -345,7 +345,7 @@
                 }
             };
 
-            const repositoriesData = [
+            const publicationsData = [
                 { name: '<strong>Rodrigues, A. M. M.</strong>, Riehl C. 2025. The evolution of cooperative breeding in family groups: when should parents tolerate unhelpful helpers? <em>Philosophical Transactions of the Royal Society B</em>, 380: 20230275.', 
                     type: ['altruism'], 
                     human_data: 
@@ -494,7 +494,7 @@
                 },
                 {
                     title: 'Prospective Students',
-                    content: 'The <strong>Social Evolution and Behavioral Ecology Lab</strong> applies quantitative and mathematical methods to study a wide range of topics in social evolution and behavioral ecology. Our research explores <strong>themes</strong> such as: <ul><li class="mt-2 ml-4 list-disc">altruism, intergroup cooperation and conflict, symbiosis and mutualism, dispersal, sex allocation, life-history evolution, and infectious diseases. </li></ul><p class="mt-2 ml-0"><strong></strong> We use a combination of <strong>methods, approaches and frameworks</strong> to investigate these questions, including: </p> <ul class="mt-2 ml-4 list-disc"><li>mathematical modeling, individual-based simulations, and evolutionary theory</li></ul><p class="mt-2 ml-0"><strong></strong>Students from biology, mathematics, physics, computer science, or related fields are encouraged to reach out. If you are interested in joining the lab, feel free to email me with a <strong>CV</strong> and a <strong>short statement</strong> explaining your motivation to join and how your interests align with the lab&#39;s research.</p>'
+                    content: 'The <strong>Social Evolution and Ecology Lab</strong> applies quantitative and mathematical methods to study a wide range of topics in social evolution and behavioral ecology. Our research explores <strong>themes</strong> such as: <ul><li class="mt-2 ml-4 list-disc">altruism, intergroup cooperation and conflict, symbiosis and mutualism, dispersal, sex allocation, life-history evolution, and infectious diseases. </li></ul><p class="mt-2 ml-0"><strong></strong> We use a combination of <strong>methods, approaches and frameworks</strong> to investigate these questions, including: </p> <ul class="mt-2 ml-4 list-disc"><li>mathematical modeling, individual-based simulations, and evolutionary theory</li></ul><p class="mt-2 ml-0"><strong></strong>Students from biology, mathematics, physics, computer science, or related fields are encouraged to reach out. If you are interested in joining the lab, feel free to email me with a <strong>CV</strong> and a <strong>short statement</strong> explaining your motivation to join and how your interests align with the lab&#39;s research.</p>'
                 },
                 {
                     title: 'Graduate programs',
@@ -743,63 +743,63 @@
                 }
             });
 
-            const repoFiltersContainer = document.getElementById('repo-filters');
-            const repositoriesGrid = document.getElementById('repositories-grid');
-            const repoTypes = ['all', ...new Set(repositoriesData.flatMap(r => r.type))];
+            const pubFiltersContainer = document.getElementById('pub-filters');
+            const publicationsGrid = document.getElementById('publications-grid');
+            const pubTypes = ['all', ...new Set(publicationsData.flatMap(p => p.type))];
 
-            repoTypes.forEach(type => {
+            pubTypes.forEach(type => {
                 const button = document.createElement('button');
                 button.textContent = type;
                 button.dataset.type = type;
-                button.className = 'repo-filter-btn px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200';
+                button.className = 'pub-filter-btn px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200';
                 if (type === 'all') {
                     button.classList.add('bg-blue-600', 'text-white');
                 } else {
                     button.classList.add('bg-white', 'text-slate-600', 'hover:bg-blue-100');
                 }
-                repoFiltersContainer.appendChild(button);
+                pubFiltersContainer.appendChild(button);
             });
 
-            function renderRepositories(filter = 'all') {
-                repositoriesGrid.innerHTML = '';
-                const filtered = filter === 'all' ? repositoriesData : repositoriesData.filter(r => Array.isArray(r.type) && r.type.includes(filter));
-                filtered.forEach(repo => {
+            function renderPublications(filter = 'all') {
+                publicationsGrid.innerHTML = '';
+                const filtered = filter === 'all' ? publicationsData : publicationsData.filter(p => Array.isArray(p.type) && p.type.includes(filter));
+                filtered.forEach(pub => {
                     const card = document.createElement('div');
-                    card.className = 'repository-card bg-white p-5 rounded-lg shadow-md border border-slate-200 flex flex-col';
+                    card.className = 'publication-card bg-white p-5 rounded-lg shadow-md border border-slate-200 flex flex-col';
                     card.innerHTML = `
-                        <h3 class="font-normal text-slate-600" style="font-size: 14px;">${repo.name}</h3>
-                        <div class="flex justify-start flex-wrap gap-1 text-blue-600 underline text-sm">${Array.isArray(repo.human_data) ? repo.human_data.map(link =>`<a href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join(', '): repo.human_data}</div>
+                        <h3 class="font-normal text-slate-600" style="font-size: 14px;">${pub.name}</h3>
+                        <div class="flex justify-start flex-wrap gap-1 text-blue-600 underline text-sm">${Array.isArray(pub.human_data) ? pub.human_data.map(link =>`<a href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join(', '): pub.human_data}</div>
                         <div class="mt-4 pt-4 border-t border-slate-200 space-y-2 text-sm">
-                            <div class="flex justify-start"><div class="flex flex-wrap gap-1">${repo.type.map(tag => `<span class="text-blue-600 text-xs font-normal py-0.5 px-2 bg-blue-100 rounded-full mr-1">${tag}</span>`).join('')}</div></div>
+                            <div class="flex justify-start"><div class="flex flex-wrap gap-1">${pub.type.map(tag => `<span class="text-blue-600 text-xs font-normal py-0.5 px-2 bg-blue-100 rounded-full mr-1">${tag}</span>`).join('')}</div></div>
                         </div>
                     `;
-                    repositoriesGrid.appendChild(card);
+                    publicationsGrid.appendChild(card);
                 });
             }
 
-            //<p class="mt-2 text-sm text-slate-500 flex-grow">${repo.description}</p>
-            //<div class="flex justify-between"><span class="font-semibold text-slate-700">Cost:</span> <span>${repo.cost}</span></div>
-            //<div class="flex justify-between"><span class="font-semibold text-slate-700">Identifier:</span> <span>${repo.pid}</span></div>
+            //<p class="mt-2 text-sm text-slate-500 flex-grow">${pub.description}</p>
+            //<div class="flex justify-between"><span class="font-semibold text-slate-700">Cost:</span> <span>${pub.cost}</span></div>
+            //<div class="flex justify-between"><span class="font-semibold text-slate-700">Identifier:</span> <span>${pub.pid}</span></div>
 
-            repoFiltersContainer.addEventListener('click', (e) => {
-                if (e.target.matches('.repo-filter-btn')) {
-                    document.querySelectorAll('.repo-filter-btn').forEach(btn => {
+            pubFiltersContainer.addEventListener('click', (e) => {
+                if (e.target.matches('.pub-filter-btn')) {
+                    document.querySelectorAll('.pub-filter-btn').forEach(btn => {
                         btn.classList.remove('bg-blue-600', 'text-white');
                         btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-blue-100');
                     });
                     e.target.classList.add('bg-blue-600', 'text-white');
                     e.target.classList.remove('bg-white', 'text-slate-600');
-                    renderRepositories(e.target.dataset.type);
+                    renderPublications(e.target.dataset.type);
                 }
             });
 
             // LINK FROM AREAS TO PUBLICATIONS
-            function renderRepositoriesWithTag(tag, shouldScroll = true) {
+            function renderPublicationsWithTag(tag, shouldScroll = true) {
                 // Always re-render
-                renderRepositories(tag);
+                renderPublications(tag);
             
                 // Update button states
-                document.querySelectorAll('.repo-filter-btn').forEach(btn => {
+                document.querySelectorAll('.pub-filter-btn').forEach(btn => {
                     const isMatch = btn.dataset.type === tag;
                     btn.classList.toggle('bg-blue-200', isMatch);
                     btn.classList.toggle('text-blue-800', isMatch);
@@ -809,31 +809,31 @@
             
                 // Optional: Scroll to section if requested
                 if (shouldScroll) {
-                    const section = document.getElementById('repositories');
+                    const section = document.getElementById('publications');
                     if (section) section.scrollIntoView({ behavior: 'smooth' });
                 }
             
                 // Update URL hash so re-clicking links works
-                const newHash = `#repositories?filter=${encodeURIComponent(tag)}`;
+                const newHash = `#publications?filter=${encodeURIComponent(tag)}`;
                 history.replaceState(null, '', newHash);
             }
             
             // Handle filter button clicks
-            repoFiltersContainer.addEventListener('click', (e) => {
-                if (e.target.matches('.repo-filter-btn')) {
+            pubFiltersContainer.addEventListener('click', (e) => {
+                if (e.target.matches('.pub-filter-btn')) {
                     const tag = e.target.dataset.type;
-                    renderRepositoriesWithTag(tag);
+                    renderPublicationsWithTag(tag);
                 }
             });
             
             // Handle link-to-filter from other sections/pages
             function applyFilterFromHash() {
                 const hash = window.location.hash;
-                if (hash.startsWith('#repositories?filter=')) {
+                if (hash.startsWith('#publications?filter=')) {
                     const tag = decodeURIComponent(hash.split('=')[1]);
-                    renderRepositoriesWithTag(tag);
+                    renderPublicationsWithTag(tag);
                 } else {
-                    renderRepositoriesWithTag('all', false); // default view
+                    renderPublicationsWithTag('all', false); // default view
                 }
             }
             
@@ -921,7 +921,7 @@
             });
 
             updatePlatformView('dnanexus');
-            renderRepositories('all');
+            renderPublications('all');
             document.querySelector('.step-item').classList.add('active');
             document.querySelector('.step-content').classList.remove('hidden');
         });

@@ -687,10 +687,10 @@
             pubFiltersContainer.addEventListener('click', (e) => {
                 if (e.target.matches('.pub-filter-btn')) {
                     document.querySelectorAll('.pub-filter-btn').forEach(btn => {
-                        btn.classList.remove('bg-blue-600', 'text-white');
+                        btn.classList.remove('bg-blue-100', 'text-blue-600');
                         btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-blue-100');
                     });
-                    e.target.classList.add('bg-blue-600', 'text-white');
+                    e.target.classList.add('bg-blue-100', 'text-blue-600');
                     e.target.classList.remove('bg-white', 'text-slate-600');
                     renderPublications(e.target.dataset.type);
                 }

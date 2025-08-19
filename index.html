@@ -288,25 +288,25 @@
                     icon: '🐜',
                     title: 'Altruism',
                     short: 'Why should organisms sacrifice themselves to help others?',
-                    long: 'Altruism is a major evolutionary problem because it carries a fitness cost that places organisms at a disadvantage relative to more selfish individuals. Yet, altruism is a common behaviour across a wide range of taxa. My research investigates how environmental and individual heterogeneity influence the evolution of altruism.<br><a href="index.html#publications?filter=altruism" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                    long: 'Altruism is a major evolutionary problem because it carries a fitness cost that places organisms at a disadvantage relative to more selfish individuals. Yet, altruism is a common behaviour across a wide range of taxa. My research investigates how environmental and individual heterogeneity influence the evolution of altruism.<br><a href="#publications?filter=altruism" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
                 },
                 {
                     icon: '🦋',
                     title: 'Dispersal',
                     short: 'Why risk leaving home when staying seems safer?',
-                    long: 'Many organisms remain near their birthplace, benefiting from shelter and familiarity with their environment. Others, however, abandon these advantages and take the risks associated with dispersal. Our research seeks to uncover the conditions under which dispersal is favored by natural selection. We focus not only on ecological and environmental factors, but also on social factors such as group size and kinship.<br><a href="index.html#publications?filter=dispersal" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                    long: 'Many organisms remain near their birthplace, benefiting from shelter and familiarity with their environment. Others, however, abandon these advantages and take the risks associated with dispersal. Our research seeks to uncover the conditions under which dispersal is favored by natural selection. We focus not only on ecological and environmental factors, but also on social factors such as group size and kinship.<br><a href="#publications?filter=dispersal" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
                 },
                 {
                     icon: '♂️♀️',
                     title: 'Sex allocation',
                     short: 'When should parents favor boys, and when girls?',
-                    long: 'How do organisms decide how much to invest in sons versus daughters? What determines the optimal ratio? These are some of the key questions that sex allocation theory seeks to answer. While many species exhibit balanced sex ratios, nature offers numerous examples ranging from extremely female- to male-biased ratios. We are interested in how factors such as information use and individual quality influence the evolution of sex allocation strategies. <br><a href="index.html#publications?filter=sex allocation" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                    long: 'How do organisms decide how much to invest in sons versus daughters? What determines the optimal ratio? These are some of the key questions that sex allocation theory seeks to answer. While many species exhibit balanced sex ratios, nature offers numerous examples ranging from extremely female- to male-biased ratios. We are interested in how factors such as information use and individual quality influence the evolution of sex allocation strategies. <br><a href="#publications?filter=sex allocation" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
                 },
                 {
                     icon: '⌛',
                     title: 'Life history',
                     short: 'Why do some organisms live fast and die young?',
-                    long: 'Life history evolution is essential for understanding the reproductive schedules of organisms and life-history traits such as body size, fertility, survival, and lifespan. The life history evolution framework focuses on how different traits contribute to lifetime fitness, taking into account trade-offs in the allocation of resources among traits. We are particularly interested in how the social environment and ecological context shape life history evolution.<br><a href="index.html#publications?filter=life history" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                    long: 'Life history evolution is essential for understanding the reproductive schedules of organisms and life-history traits such as body size, fertility, survival, and lifespan. The life history evolution framework focuses on how different traits contribute to lifetime fitness, taking into account trade-offs in the allocation of resources among traits. We are particularly interested in how the social environment and ecological context shape life history evolution.<br><a href="#publications?filter=life history" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
                 }
             ];
 
@@ -841,6 +841,16 @@
             renderPublications('all');
             document.querySelector('.step-item').classList.add('active');
             document.querySelector('.step-content').classList.remove('hidden');
+            
+            document.body.addEventListener('click', (e) => {
+              const link = e.target.closest('a[href^="#publications?filter="]');
+              if (link) {
+                e.preventDefault(); // stop reload
+                const tag = decodeURIComponent(link.getAttribute('href').split('=')[1]);
+                renderPublicationsWithTag(tag, true);
+              }
+            });
+  
         });
     </script>
 </body>

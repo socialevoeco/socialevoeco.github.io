@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social evolution and behavioral ecology</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: The SPA is designed as a task-oriented dashboard to guide a lab member through the report's key findings and recommendations. The structure is non-linear, prioritizing user tasks over the report's original sequence. It starts with a summary (Home), explains the foundational concepts (Principles), provides an interactive tool for comparing solutions (Platform Comparison), offers a practical guide for data deposition (Repository Guide), and outlines the action plan (Protocol). This structure was chosen to make the dense information actionable and easily digestible, allowing users to jump directly to the section most relevant to their immediate needs, such as comparing platform costs or finding a suitable repository for their specific data type. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Foundational Principles (FAIR, Governance, etc.). Goal: Inform/Organize. Viz/Method: Interactive Cards (HTML/CSS/JS). Interaction: Click to reveal details. Justification: Breaks down complex concepts into manageable, user-initiated chunks, preventing information overload. Library: Vanilla JS.
+        - Report Info: Platform comparison (DNAnexus, Globus, Google Cloud). Goal: Compare. Viz/Method: Dynamic content blocks and a Radar Chart. Interaction: User selects a platform via buttons to update the chart and detailed info panel. Justification: Provides both a quick visual comparison (chart) and in-depth details on demand, facilitating an informed decision. Library: Chart.js for the radar chart, Vanilla JS for content updates.
+        - Report Info: Public repository recommendations (Table 3). Goal: Organize/Inform. Viz/Method: Filterable grid of cards. Interaction: User filters by data type (Sequencing, Metabolomics, etc.). Justification: Transforms a static table into a practical tool, allowing users to quickly find the most relevant repository for their specific needs. Library: Vanilla JS.
+        - Report Info: Implementation protocol. Goal: Organize/Inform. Viz/Method: HTML/CSS Stepper component. Interaction: Click on a step to view details. Justification: Visualizes the protocol as a clear, sequential workflow, making the multi-step process easier to follow and implement. Library: Vanilla JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+        .nav-link.active {
+            color: #2563eb; /* blue-600 */
+            border-bottom-color: #2563eb;
+        }
+        .platform-btn.active {
+            background-color: #dbeafe; /* blue-700 */
+            color: #1e40af;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .principle-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .principle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .repository-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .repository-card:hover {
+             transform: scale(1.03);
+             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .step-item.active .step-circle {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+        .step-item.active .step-title {
+            color: #1e3a8a;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#home" class="text-xl font-bold text-gray-500">Social Evolution and Ecology Lab</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#home" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Home</a>
+                        <a href="#principles" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Research <br> themes</a>
+                        <a href="#platforms" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Projects</a>
+                        <a href="#repositories" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Publications</a>
+                        <!-- New link -->
+                        <a href="#pi" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">PI</a>
+                        <a href="#protocol" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Courses and <br> prospective students</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-slate-500 hover:text-blue-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="h-6 w-6" id="menu-open-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                        <svg class="h-6 w-6 hidden" id="menu-close-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+             <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#home" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Home</a>
+                    <a href="#principles" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Research <br> areas</a>
+                    <a href="#platforms" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Current <br> projects</a>
+                    <a href="#repositories" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Publications</a>
+                    <!-- New link -->
+                    <a href="#pi" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">PI</a>
+                    <a href="#protocol" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Courses and <br> prospective students</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="home" class="py-20 md:py-28 relative bg-cover bg-center" style="background-image: url('background.jpeg');">
+            <div class="absolute inset-0 bg-white/70"></div>
+            <div class="relative container mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 leading-tight text-center">Research summary</h1>
+                <p class="mt-6 max-w-3xl mx-auto text-lg text-slate-600 text-justify">
+                    I study how organisms adapt to their environment by examining the ecological, demographic, and genetic factors that shape social and life-history traits. My research integrates biological insights with theoretical modelling. Using a diverse range of modelling approaches, including kin selection, game theory, population genetics, and individual-based simulations, I explore the underlying principles that drive adaptive evolution across species and ecological communities. My research involves designing both general models that identify fundamental selection pressures operating in populations and tailored models to study specific biological systems. My work spans a broad range of taxonomic groups, from viruses and bacteria to fungi, insects, birds, and mammals. I aim to develop a comprehensive understanding of how adaptive evolution operates across different levels of biological organisation and how organisms respond to environmental variation.
+                </p>
+                <div class="mt-10 text-center">
+                    <a href="https://eccb.tamu.edu/people/rodrigues-antonio-m-m/" target="_blank" rel="noopener"  class="bg-neutral-100 text-gray-600 font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-blue-300 transition-all duration-300">My webpage at TAMU</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="principles" class="py-20 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-slate-900">Research themes</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-slate-600">We work on a wide range of themes within social evolution and behavioral ecology.</p>
+                </div>
+                <div id="principles-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                </div>
+            </div>
+        </section>
+
+        <section id="platforms" class="py-20 md:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-slate-900">Projects</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-slate-600">Some of our ongoing projects includes the study of cooperative breeding, dispersal and the evolution of intergroup cooperation and intergroup conflict.</p>
+                </div>
+                <div class="flex justify-center space-x-2 md:space-x-4 mb-10">
+                </div>
+                <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+                    <div id="platform-details" class="bg-slate-50 p-6 md:p-8 rounded-lg border border-slate-200">
+                    </div>
+                    <div class="chart-container">
+                      <canvas id="platform-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="repositories" class="py-20 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">Publications</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-slate-600">A complete list of publications can be found <a href="publications.html" class="text-blue-600 underline hover:text-blue-800">here</a>.</p>
+                </div>
+                <div class="flex justify-center flex-wrap gap-2 md:gap-4 mb-10" id="repo-filters">
+                </div>
+                <div id="repositories-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                </div>
+            </div>
+        </section>
+
+
+  
+        <!-- LAB MEMBERS -->
+        <section id="pi" class="mt-12 bg-white py-20 px-4 rounded-lg">
+          <!-- Centered Title -->
+          <h2 class="text-3xl font-semibold text-slate-800 text-center mb-6">Principal Investigator</h2>
+          
+           <!-- Centered Grid Container -->
+          <div class="flex justify-center">
+          <div class="grid grid-cols-1 gap-6 w-fit">
+            
+            <!-- Member Card -->
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 shadow-sm max-w-md flex flex-col md:flex-row items-center gap-4">
+              <img src="Rodrigues.jpg" alt="Antonio M. M. Rodrigues" class="w-48 h-48 rounded-full object-cover border border-slate-300 shadow-sm">
+              
+              <div>
+                <div class="text-lg font-semibold text-slate-900">Antonio M. M. Rodrigues, <em>DPhil</em></div>
+                <div class="text-sm text-slate-600 mb-1">Assistant Professor</div>
+                <div class="text-sm text-slate-500">
+                  Antonio is a behavioral ecologist working on social evolution and evolutionary ecology.
+                </div>
+              </div>
+            </div>
+        
+            <!-- Member Card -->
+            <!--
+            <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm max-w-xs">
+              <div class="text-lg font-medium text-slate-900">Carlos Reyes</div>
+              <div class="text-sm text-slate-600 mb-2">PhD Student</div>
+              <p class="text-sm text-slate-500">
+                Carlos is working on spatial structure and parasite evolution using individual-based simulations.
+              </p>
+            </div> -->
+        
+            <!-- Add more member cards as needed -->
+          </div>
+          </div>
+        </section>
+
+
+        <section id="protocol" class="py-20 md:py-24 bg-slate-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-slate-900">Courses and prospective students</h2>
+                </div>
+                <div id="protocol-stepper" class="max-w-4xl mx-auto">
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- CONTACT -->
+        <section  class="mt-12 bg-gray-500 py-5 px-1">
+          <!-- Centered Title -->
+          <h2 class="text-3xl font-semibold text-slate-800 text-center mb-6"></h2>
+          
+           <!-- Centered Grid Container -->
+          <div class="flex justify-center">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-fit">
+            
+            <!-- Address -->
+            <div class="bg-gray-500 border border-gray-500 rounded-lg p-4 shadow-sm max-w-md flex flex-col md:flex-row items-center gap-4">
+              <div>
+                <div class="text-base font-semibold text-slate-100">Social Evolution and Ecology Lab</div>
+                <div class="text-sm text-slate-100 mb-1">534 John Kimbrough Blvd, TAMU 2258</div>
+                <div class="text-sm text-slate-100 mb-1">College Station, TX 77843-2258</div>
+                <div class="text-sm text-slate-100 mb-1">Department of Ecology and Conservation Biology</div>
+                
+              </div>
+            </div>
+        
+            <!-- Blank card -->
+            
+            <div class="bg-gray-500 border border-gray-500 rounded-lg p-4 shadow-sm max-w-xs">
+              <div class="text-lg font-medium text-slate-900"></div>
+              <div class="text-sm text-slate-600 mb-2"></div>
+              <p class="text-sm text-slate-500">
+              </p>
+            </div>
+        
+            <!-- Email -->
+             <div class="relative bg-gray-500 border border-gray-500 rounded-lg p-4 shadow-sm max-w-md flex flex-col md:flex-row items-start gap-4">
+                <div class="text-lg font-medium text-slate-900"><p class="mt-4 max-w-3xl mx-auto text-slate-600">
+                      <a href="mailto:antonio.rodrigues@tamu.edu" class="absolute top-3 left-3 text-blue-600 text-3xl hover:text-blue-200">✉️</a></p></div>
+                <div class="text-sm text-slate-600 mb-2"></div>
+                <p class="text-sm text-slate-500"></p>
+            </div>
+        
+          </div>
+          </div>
+          
+        </section>
+
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+            <p>&copy; Social Evolution and Ecology Lab. All Rights Reserved.</p>
+            <p class="text-sm mt-2">Department of Ecology and Conservation Biology, Texas A&M University.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const principlesData = [
+                {
+                    icon: '🐜',
+                    title: 'Altruism',
+                    short: 'Why should organisms sacrifice themselves to help others?',
+                    long: 'Altruism is a major evolutionary problem because it carries a fitness cost that places organisms at a disadvantage relative to more selfish individuals. Yet, altruism is a common behaviour across a wide range of taxa. My research investigates how environmental and individual heterogeneity influence the evolution of altruism.<br><a href="index.html#repositories?filter=altruism" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                },
+                {
+                    icon: '🦋',
+                    title: 'Dispersal',
+                    short: 'Why risk leaving home when staying seems safer?',
+                    long: 'Many organisms remain near their birthplace, benefiting from shelter and familiarity with their environment. Others, however, abandon these advantages and take the risks associated with dispersal. Our research seeks to uncover the conditions under which dispersal is favored by natural selection. We focus not only on ecological and environmental factors, but also on social factors such as group size and kinship.<br><a href="index.html#repositories?filter=dispersal" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                },
+                {
+                    icon: '♂️♀️',
+                    title: 'Sex allocation',
+                    short: 'When should parents favor boys, and when girls?',
+                    long: 'How do organisms decide how much to invest in sons versus daughters? What determines the optimal ratio? These are some of the key questions that sex allocation theory seeks to answer. While many species exhibit balanced sex ratios, nature offers numerous examples ranging from extremely female- to male-biased ratios. We are interested in how factors such as information use and individual quality influence the evolution of sex allocation strategies. <br><a href="index.html#repositories?filter=sex allocation" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                },
+                {
+                    icon: '⌛',
+                    title: 'Life history',
+                    short: 'Why do some organisms live fast and die young?',
+                    long: 'Life history evolution is essential for understanding the reproductive schedules of organisms and life-history traits such as body size, fertility, survival, and lifespan. The life history evolution framework focuses on how different traits contribute to lifetime fitness, taking into account trade-offs in the allocation of resources among traits. We are particularly interested in how the social environment and ecological context shape life history evolution.<br><a href="index.html#repositories?filter=life history" class="text-blue-600 hover:underline text-sm mt-2 inline-block">View papers →</a>'
+                }
+            ];
+
+            const platformsData = {
+                dnanexus: {
+                    name: 'Cooperative breeding',
+                    image1: 'image1a.png',
+                    image2: 'image1b.png',
+                    image3: 'image1c.png',
+                    summary: 'Rodrigues, A. M. M., Riehl C. 2025. <strong>The evolution of cooperative breeding in family groups: when should parents tolerate unhelpful helpers?</strong> Philosophical Transactions of the Royal Society B, 380: 20230275. <a href="https://doi.org/10.1098/rstb.2023.0275" target="_blank" rel="noopener" class="text-blue-600 underline">doi</a>',
+                    //summary: 'Rodrigues, A. M. M., Riehl C. 2025. <a href="https://doi.org/10.1098/rstb.2023.0275" target="_blank" rel="noopener" class="text-blue-600 underline">The evolution of cooperative breeding in family groups: when should parents tolerate unhelpful helpers?</a> Philosophical Transactions of the Royal Society B, 380: 20230275.',
+                    //summary: 'Rodrigues, A. M. M., Riehl C. 2025. <strong>The evolution of cooperative breeding in family groups: when should parents tolerate unhelpful helpers?</strong> <em>Philosophical Transactions of the Royal Society B</em>, 380: 20230275.',
+                    bestFor: 'Cooperatively breeding vertebrates typically live in family groups in which some offspring delay breeding and remain on the natal territory to help rear younger siblings. However, field studies find that helpers can have a neutral or even negative effect on the survival of their relatives. Why, then, do helpers remain, and why do parents tolerate them? Here, we use a kin selection approach to model the conditions under which tolerating helpers is adaptive to parents. Unlike previous models, we consider scenarios in which relatives compete for breeding opportunities in a saturated habitat. We show that kin competition is sufficient to favour tolerance of helpers, even when helpers decrease parental survival or fecundity. Helping is additionally favoured when delaying dispersal benefits the helper (either by decreasing the costs of dispersal or by increasing the chance of territory inheritance). This suggests that the division of reproduction in cooperative family groups can emerge for reasons unrelated to the effects of help itself, but the resulting society sets the stage for more elaborate forms of division of labour. Kin-based helping may therefore be adaptive not only because helpers are related to the brood whom they help, but also because delayed breeding reduces reproductive conflict among siblings. ',
+                    features: ['Cooperative breeders.','Remarkably, half of the brood delays breeding even when no helping occurs.', 'Some offspring delay breeding even when doing so imposes costs on the group.'],
+                    compliance: '1', cost: 's', scores: [9, 8, 4, 9, 9]
+                },
+                globus: {
+                    name: 'Social rank inheritance',
+                    image1: 'image2a.png',
+                    image2: 'image2b.png',
+                    image3: 'image2c.png',
+                    summary: 'Rodrigues, A. M. M., Gardner A. 2023. <strong>Transmission of social status drives cooperation and offspring philopatry</strong>. Proceeding of the Royal Society B, 290: 20231314. <a href="https://doi.org/10.1098/rspb.2023.1314" target="_blank" rel="noopener" class="text-blue-600 underline">doi</a> ',
+                    bestFor: 'The evolution of cooperation depends on two crucial overarching factors: relatedness, which describes the extent to which the recipient shares genes in common with the actor; and quality, which describes the recipient&apos;s basic capacity to transmit genes into the future. While most research has focused on relatedness, there is a growing interest in understanding how quality modulates the evolution of cooperation. However, the impact of inheritance of quality on the evolution of cooperation remains largely unexplored, especially in spatially structured populations. Here, we develop a mathematical model to understand how inheritance of quality, in the form of social status, influences the evolution of helping and harming within social groups in a viscous-population setting. We find that: (1) status-reversal transmission, whereby parental and offspring status are negatively correlated, strongly inhibits the evolution of cooperation, with low-status individuals investing less in cooperation and high-status individuals being more prone to harm; (2) transmission of high status promotes offspring philopatry, with more cooperation being directed towards the higher-dispersal social class; and (3) fertility inequality and inter-generational status inheritance reduce within-group conflict. Overall, our study highlights the importance of considering different mechanisms of phenotypic inheritance, including social support, and their potential interactions in shaping animal societies.',
+                    features: ['Rank-based societies are common among many species.', 'The rank with greater dispersal tends to receive more help.','Rank inheritance tends to favor high-status philopatry.'],
+                    compliance: '', cost: '.', scores: [5, 9, 9, 7, 8]
+                },
+                google_cloud: {
+                    name: 'Intergroup cooperation',
+                    image1: 'image3a.png',
+                    image2: 'image3b.png',
+                    image3: 'image3c.png',
+                    summary: 'Rodrigues, A. M. M., Barker J. L., Robinson, E. J. H. 2023. <strong>The evolution of intergroup cooperation</strong>. Philosophical Transactions of the Royal Society B, 378, 20220074. <a href="https://doi.org/10.1098/rstb.2022.0074" target="_blank" rel="noopener" class="text-blue-600 underline">doi</a>',
+                    bestFor: 'Sociality is widespread among animals, and involves complex relationships within and between social groups. While intragroup interactions are often cooperative, intergroup interactions typically involve conflict, or at best tolerance. Active cooperation between members of distinct, separate groups occurs very rarely, predominantly in some primate and ant species. Here, we ask why intergroup cooperation is so rare, and what conditions favour its evolution. We present a model incorporating intra- and intergroup relationships and local and long-distance dispersal. We show that dispersal modes play a pivotal role in the evolution of intergroup interactions. Both long-distance and local dispersal processes drive population social structure, and the costs and benefits of intergroup conflict, tolerance and cooperation. Overall, the evolution of multi-group interaction patterns, including both intergroup aggression and intergroup tolerance, or even altruism, is more likely with mostly localized dispersal. However, the evolution of these intergroup relationships may have significant ecological impacts, and this feedback may alter the ecological conditions that favour its own evolution. These results show that the evolution of intergroup cooperation is favoured by a specific set of conditions, and may not be evolutionarily stable. We discuss how our results relate to empirical evidence of intergroup cooperation in ants and primates.',
+                    features: ['Intergroup cooperation has been documented in bonobos and ants, among others.','We model interactions among groups within patches.', 'Movement between groups favor extreme forms of intergroup cooperation.'],
+                    compliance: 'e', cost: 'e', scores: [7, 7, 8, 8, 6]
+                }
+            };
+
+            const repositoriesData = [
+                { name: '<strong>Rodrigues, A. M. M.</strong>, Riehl C. 2025. The evolution of cooperative breeding in family groups: when should parents tolerate unhelpful helpers? <em>Philosophical Transactions of the Royal Society B</em>, 380: 20230275.', 
+                    type: ['altruism'], 
+                    human_data: 
+                        [{ label: 'pdf', url: 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2025/03/rodrigues-riehl-2025-evolution-of-cooperative-breeding-phil-trans-b.pdf' },
+                        {label: 'doi', url: 'https://royalsocietypublishing.org/doi/10.1098/rstb.2023.0275'},
+                        {label: 'ris', url: 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2025/03/rodriguesriehl2025rstb.ris_.zip'},
+                        {label: 'bib', url: 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2025/03/rodriguesriehl2025rstb.bib_.zip'}], 
+                    cost: 'Free', pid: 'Accession #', description: 'Rodrigues, A. M. M., Riehl C. 2025. Philosophical Transactions of the Royal Society B, 380: 20230275.' },
+                    
+                { name: 'Robinson, E. J. H., <strong>Rodrigues, A. M. M.</strong>, Barker J. L. 2024. Is peace a human phenomenon? Commentary. <em>Behavioral and Brain Sciences</em>.', 
+                    type: ['altruism','intergroup cooperation'], 
+                    human_data: 
+                        [{label: 'doi' , url : 'https://www.cambridge.org/core/journals/behavioral-and-brain-sciences/article/abs/is-peace-a-human-phenomenon/8DB2C5BFF0F54C6004A70A5B384713B2'}
+                        ], 
+                    cost: 'Free', pid: '#', description: '.' },
+                    
+                { name: '<strong>Rodrigues, A. M. M.</strong>, Gardner A. 2023. Transmission of social status drives cooperation and offspring philopatry. <em>Proceeding of the Royal Society B</em>, 290: 20231314. ', 
+                    type: ['altruism','dispersal'], 
+                    human_data: [{label : 'doi', url : 'https://royalsocietypublishing.org/doi/10.1098/rspb.2023.1314'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2023/11/rodrigues-2023-transmission-of-social-status-drives-cooperation-and-offspring-philopatry-proc_b.pdf'}], 
+                                cost: 'Free', pid: 'Study ID', description: '.' },
+
+                { name: '<strong>Rodrigues, A. M. M.</strong>, Barker J. L., Robinson, E. J. H. 2023. The evolution of intergroup cooperation. <em>Philosophical Transactions of the Royal Society B</em>, 378, 20220074.', 
+                    type: ['altruism','intergroup cooperation'], 
+                    human_data: [{label : 'doi', url : 'https://doi.org/10.1098/rstb.2022.0074'},
+                                {label : 'pdf', url : 'https://royalsocietypublishing.org/doi/epdf/10.1098/rstb.2022.0074'}] 
+                },
+
+                { name: '<strong>Rodrigues, A. M. M.</strong>, Gardner A. 2022. Inclusive fitness: a scientific revolution. in T. E. Dickins, B. J. A. Dickins (eds), <em>Evolutionary biology: contemporary and historical reflections upon core theory</em>. Springer.', 
+                    type: ['altruism'], 
+                    human_data: [{label : 'doi', url : 'https://link.springer.com/chapter/10.1007/978-3-031-22028-9_20' },
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2023/03/rodrigues-gardner-2023-inclusive-fitness-scientific-revolution.pdf' }], 
+                    cost: 'F', pid: 'Y', description: '.' },
+                    
+                { name: '<strong>Rodrigues, A. M. M.</strong>, Gardner A. 2022. Inclusive fitness theory as scientific revolution: a commentary on Futuyma. in T. E. Dickins, B. J. A. Dickins (eds), <em>Evolutionary biology: contemporary and historical reflections upon core theory</em>. Springer.', 
+                    type: ['altruism'], 
+                    human_data: [{label : 'doi' , url : 'https://link.springer.com/chapter/10.1007/978-3-031-22028-9_33'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2023/03/rodrigues-gardner-2023-inclusive-fitness-commentary-futuyma.pdf'}], 
+                    cost: 'Free', pid: 'Yes', description: '.' },
+
+                { name: '<strong>Rodrigues, A. M. M.</strong>, Gardner A. 2022. On monism and pluralism: a reply to Dickins T. E. in T. E. Dickins, B. J. A. Dickins (eds), <em>Evolutionary biology: contemporary and historical reflections upon core theory</em>. Springer.', 
+                    type: ['altruism'], 
+                    human_data: [{label : 'doi' , url : 'https://link.springer.com/chapter/10.1007/978-3-031-22028-9_22'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2023/03/rodrigues-gardner-2023-inclusive-fitness-monism-pluralism.pdf'}], 
+                    cost: 'Free', pid: 'Yes', description: '.' },
+                    
+                { name: '<strong>Rodrigues, A. M. M.</strong>, Barker J. L., Robinson, E. J. H. 2022. From inter-group conflict to inter-group cooperation: insights from social insects. <em>Philosophical Transactions of the Royal Society B</em>, 377, 20210466.', 
+                    type: ['altruism','intergroup cooperation'], 
+                    human_data: [{label : 'doi', url : 'https://doi.org/10.1098/rstb.2021.0466'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2023/02/rodrigues-2022-intergroup-conflict-cooperation-insects-phil-trans-b.pdf'}] 
+                },
+
+                { name: '<strong>Rodrigues, A. M. M.</strong>, Gardner A. 2022. Reproductive value and the evolution of altruism. <em>Trends in Ecology and Evolution</em>, 37, 346-358.', 
+                    type: ['altruism','sex allocation','life history'], 
+                    human_data: [{label : 'doi', url : 'https://www.sciencedirect.com/science/article/pii/S0169534721003128?via%3Dihub'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2022/02/rodrigues-2022-tree.pdf'}], 
+                    cost: 'Free', pid: 'ID', description: '.' },
+                    
+                { name: '<strong>Rodrigues, A. M. M.</strong>, Estrela S., Brown, S. P. 2021. Community lifespan, niche expansion, and the evolution of interspecific cooperation. <em>Journal of Evolutionary Biology</em>, 41, 474-485.', 
+                    type: ['mutualism'], 
+                    human_data: [{label : 'doi', url : 'https://onlinelibrary.wiley.com/doi/10.1111/jeb.13739'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2022/02/rodrigues-community-lifespan-niche-expansion-and-mutualism-2021-jeb.pdf'}], 
+                    cost: 'F', pid: 'DOI', description: '.' },
+                    
+                { name: '<strong>Rodrigues, A. M. M.</strong> 2021. Evolution of age-dependent social behaviour, <em>eLS</em>, 2, 1-10.', 
+                    type: ['mutualism'], 
+                    human_data: [{label : 'doi', url : 'https://onlinelibrary.wiley.com/doi/10.1002/9780470015902.a0028744'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2023/06/rodrigues_2021_age_inclusive_fitness_els.pdf'}], 
+                    cost: 'F', pid: 'DOI', description: '.' },
+                    
+                { name: 'Stearns, S. C., <strong>Rodrigues, A. M. M.</strong> 2020. On the use of “life history theory” in evolutionary psychology. <em>Evolution and Human Behavior</em>, 41, 474-485.', 
+                    type: ['life history'], 
+                    human_data: [{label : 'doi', url : 'https://www.sciencedirect.com/science/article/abs/pii/S109051382030026X'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2022/02/stearns-rodrigues-life-history-theory-and-evolutionary-psychology-2020-ehbpdf.pdf'}], 
+                    cost: 'Free', pid: 'DOI', description: '.' },
+                    
+                { name: '<strong>Rodrigues, A. M. M.</strong> 2019. Ecological succession, patch age and the evolution of social behaviour and terminal investment. <em>Oikos</em>, 128, 87-101. ', 
+                    type: ['altruism','dispersal'], 
+                    human_data: [{label : 'doi', url : 'https://onlinelibrary.wiley.com/doi/abs/10.1111/oik.05341#'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2019/10/rodrigues-2018-oikos.pdf'}], 
+                    cost: '$', pid: 'D', description: '.' },
+                    
+                { name: '<strong>Rodrigues, A. M. M.</strong> 2018. Resource availability and adjustment of social behaviour influence patterns of inequality and productivity across societies. <em>PeerJ</em>, 6, e5488. ', 
+                    type: ['altruism'], 
+                    human_data: [{label : 'doi', url : 'https://peerj.com/articles/5488/'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2018/10/rodrigues-2018-peerj.pdf'}] 
+                },
+                { name: '<strong>Rodrigues, A. M. M.</strong> 2018. Demography, life history and the evolution of age-dependent social behaviour. <em>Journal of Evolutionary Biology</em>, 31, 1340-1353.', 
+                    type: ['altruism','dispersal','life history'], 
+                    human_data: [{label : 'doi', url : 'https://onlinelibrary.wiley.com/doi/abs/10.1111/jeb.13308'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2019/10/rodrigues-2018-jeb.pdf'}] 
+                },
+                { name: '<strong>Rodrigues, A. M. M.</strong>, T. B. Taylor. 2018. Ecological and demographic correlates of cooperation from individual to budding dispersal. <em>Journal of Evolutionary Biology</em>, 31, 1058-1070.', 
+                    type: ['altruism','dispersal'], 
+                    human_data: [{label : 'doi', url : 'https://onlinelibrary.wiley.com/doi/abs/10.1111/jeb.13286'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2018/06/rodrigues-2018-jevolbiol.pdf'}] 
+                },
+                { name: '<strong>Rodrigues, A. M. M.</strong>, and H. Kokko. 2016. Models of social evolution: Can we do better to predict “who helps whom to achieve what”? <em>Philosophical Transactions of the Royal Society of London B</em>, 371, 20150088.', 
+                    type: ['altruism'], 
+                    human_data: [{label : 'doi', url : 'http://rstb.royalsocietypublishing.org/content/371/1687/20150088.abstract'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2018/06/rodrigues-2016-philtransrsocb.pdf'}] 
+                },
+                { name: '<strong>Rodrigues, A. M. M.</strong>, and A. Gardner. 2016. The constant philopater hypothesis: a new life history invariant for dispersal evolution. <em>Journal of Evolutionary Biology</em>, 29, 153-166.', 
+                    type: ['dispersal'], 
+                    human_data: [{label : 'doi', url : 'http://onlinelibrary.wiley.com/doi/10.1111/jeb.12771/abstract'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2018/06/rodrigues-2016-jevolbiol.pdf'}] 
+                },
+                { name: 'Johnstone, R. A., <strong>A. M. M. Rodrigues</strong>.  2016. Cooperation and the common good. <em>Philosophical Transactions of the Royal Society of London B</em>, 371, 20150086.', 
+                    type: ['altruism'], 
+                    human_data: [{label : 'doi', url : 'http://rstb.royalsocietypublishing.org/content/371/1687/20150086.abstract'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2022/06/johnstone-rodrigues-2016-common-good-proc-b.pdf'}] 
+                },
+                { name: '<strong>Rodrigues, A. M. M.</strong>, and A. Gardner. 2015. Simultaneous failure of two sex-allocation invariants: implications for sex-ratio variation within and between populations. <em>Proceedings of the Royal Society B</em>, 282, 20150570.', 
+                    type: ['sex allocation'], 
+                    human_data: [{label : 'doi', url : 'http://rspb.royalsocietypublishing.org/content/282/1810/20150570'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2018/06/rodrigues-2015-procb.pdf'}] 
+                },
+                { name: '<strong>Rodrigues, A. M. M.</strong>, and R. A. Johnstone. 2014. Evolution of positive and negative density-dependent dispersal. <em>Proceedings of the Royal Society B</em> 281, 20141226.', 
+                    type: ['dispersal'], 
+                    human_data: [{label : 'doi', url : 'http://rspb.royalsocietypublishing.org/content/281/1791/20141226'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2018/06/rodrigues-2014-procrsocb.pdf'}] 
+                },
+                { name: '<strong>Rodrigues, A. M. M.</strong>, and A. Gardner. 2013. Evolution of helping and harming in heterogeneous groups. <em>Evolution</em> 67, 2284-2298.', 
+                    type: ['altruism'], 
+                    human_data: [{label : 'doi', url : 'http://onlinelibrary.wiley.com/doi/10.1111/evo.12110/abstract'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2023/02/rodrigues_helping_heterogeneous_groups_evolution_2013.pdf'}] 
+                },
+                { name: '<strong>Rodrigues, A. M. M.</strong>, and A. Gardner. 2013. Evolution of helping and harming in viscous populations when group size varies. <em>The American Naturalist</em> 181, 609-622.', 
+                    type: ['altruism'], 
+                    human_data: [{label : 'doi', url : 'http://www.jstor.org/stable/10.1086/670031'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2023/02/rodrigues_2013_american_naturalist_helping_group_size_varies.pdf'}] 
+                },
+                { name: 'O’Brien, S., <strong>A. M. M. Rodrigues</strong>, and A. Buckling. 2013. The evolution of bacterial mutation rates under simultaneous selection by interspecific and social parasitism. <em>Proceedings of the Royal Society B</em> 280, 20131913.', 
+                    type: ['altruism'], 
+                    human_data: [{label : 'doi', url : 'http://rspb.royalsocietypublishing.org/content/280/1773/20131913.short?rss=1'},
+                                {label : 'pdf', url : 'https://antoniommrodrigues.wordpress.com/wp-content/uploads/2022/06/obrien-rodrigues-buckling-2013-proc-b.pdf'}] 
+                },
+
+                
+            ];
+
+            const protocolData = [
+                {
+                    title: 'Courses',
+                    content: '<strong>ECCB 403 Population and Community Ecology</strong>. Topics include: <ul><li class="mt-2 ml-4 list-disc">Geometric growth </li><li class="mt-2 ml-4 list-disc">Class-structured populations, age-structured populations</li><li class="mt-2 ml-4 list-disc">Demography and environmental fluctuations</li><li class="mt-2 ml-4 list-disc">Competition and mutualism</li><li class="mt-2 ml-4 list-disc">Predator prey interactions</li></ul>'
+                },
+                {
+                    title: 'Prospective Students',
+                    content: 'The <strong>Social Evolution and Behavioral Ecology Lab</strong> applies quantitative and mathematical methods to study a wide range of topics in social evolution and behavioral ecology. Our research explores <strong>themes</strong> such as: <ul><li class="mt-2 ml-4 list-disc">altruism, intergroup cooperation and conflict, symbiosis and mutualism, dispersal, sex allocation, life-history evolution, and infectious diseases. </li></ul><p class="mt-2 ml-0"><strong></strong> We use a combination of <strong>methods, approaches and frameworks</strong> to investigate these questions, including: </p> <ul class="mt-2 ml-4 list-disc"><li>mathematical modeling, individual-based simulations, and evolutionary theory</li></ul><p class="mt-2 ml-0"><strong></strong>Students from biology, mathematics, physics, computer science, or related fields are encouraged to reach out. If you are interested in joining the lab, feel free to email me with a <strong>CV</strong> and a <strong>short statement</strong> explaining your motivation to join and how your interests align with the lab&#39;s research.</p>'
+                },
+                {
+                    title: 'Graduate programs',
+                    content: `<ul>
+                      <li class="mt-2 ml-4 list-disc"><a href="https://eccb.tamu.edu/graduate-degrees/" class="text-blue-500 underline hover:text-blue-700" target="_blank" rel="noopener noreferrer">Ecology and Conservation Biology Graduate Program</a></li>
+                      <li class="mt-2 ml-4 list-disc"><a href="https://eeb.tamu.edu/graduate-program/" class="text-blue-500 underline hover:text-blue-700" target="_blank" rel="noopener noreferrer">Ecology and Evolutionary Biology Graduate Program</a></li>
+                    </ul>`
+                }
+            ];
+
+            const principlesGrid = document.getElementById('principles-grid');
+            principlesData.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'principle-card bg-white p-6 rounded-lg shadow-md cursor-pointer';
+                card.innerHTML = `
+                    <div class="flex justify-between items-center px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-medium w-full max-w-xs">
+                      <span class="text-base mr-2">${p.title}</span>
+                      <span class="text-2xl ml-auto text-right">${p.icon}</span>
+                    </div>
+                    <p class="mt-4 text-slate-600">${p.short}</p>
+                    <div class="mt-4 text-sm text-slate-500 font-medium text-blue-600">Learn More →</div>
+                    <div class="long-desc hidden mt-4 text-slate-600 text-sm">${p.long}</div>
+                  `;
+                principlesGrid.appendChild(card);
+            });
+            
+            principlesGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.principle-card');
+                if (card) {
+                    const shortDesc = card.querySelector('p');
+                    const longDesc = card.querySelector('.long-desc');
+                    const learnMore = card.querySelector('.text-blue-600');
+                    shortDesc.classList.toggle('hidden');
+                    longDesc.classList.toggle('hidden');
+                    learnMore.textContent = longDesc.classList.contains('hidden') ? 'Learn More →' : '← Show Less';
+                }
+            });
+            
+            const platformButtonsContainer = document.querySelector('#platforms .flex');
+            const platformDetailsContainer = document.getElementById('platform-details');
+            let platformChart;
+
+            function updatePlatformView(platformKey) {
+                const platform = platformsData[platformKey];
+                
+                document.querySelectorAll('.platform-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector(`[data-platform="${platformKey}"]`).classList.add('active');
+
+                platformDetailsContainer.innerHTML = `
+                    <h3 class="text-2xl font-bold text-slate-900">${platform.name}</h3>
+                    <p class="mt-3 text-slate-600 text-sm">${platform.summary}</p>
+                    <div class="mt-2">
+                        <h4 class="font-semibold text-slate-800">Abstract</h4>
+                        <p class="mt-1 text-slate-600 text-sm">${platform.bestFor}</p>
+                    </div>
+                    <div class="mt-2">
+                        <h4 class="font-semibold text-slate-800">Figures</h4>
+                        <ul class="mt-1 space-y-1 text-slate-600">
+                            ${platform.features.map((f, i) => `
+                            <li class="flex items-baseline space-x-1 text-sm">
+                            <span class="text-blue-500 font-bold w-3 text-left">${i + 1}.</span>
+                            <span class="flex-1">${f}</span>
+                          </li>
+                        `).join('')}
+                       </ul>
+                `;
+                
+                // </div>
+                //    <div class="mt-6 grid grid-cols-2 gap-4">
+                //        <div>
+                //            <h4 class="font-semibold text-slate-800">Compliance:</h4>
+                //            <p class="mt-1 text-slate-600 text-sm">${platform.compliance}</p>
+                //        </div>
+                //        <div>
+                //            <h4 class="font-semibold text-slate-800">Cost Model:</h4>
+                //            <p class="mt-1 text-slate-600 text-sm">${platform.cost}</p>
+                //        </div>
+                //    </div>
+                
+                
+                // const chartContainer = document.querySelector('.chart-container'); chartContainer.innerHTML = `<img src="${platform.image}" alt="${platform.name}" class="w-[200px] rounded-lg border">`
+                const chartContainer = document.querySelector('.chart-container');
+
+                //<button id="toggle-image-btn" class="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                //  Toggle Image
+                //</button>
+
+                //
+                //chartContainer.innerHTML = `
+                //  <div class="flex flex-col items-center space-y-4">
+                //    <img id="platform-image" src="${platform.image1 || platform.image}" alt="${platform.name}" class="w-full h-[32rem] object-contain rounded-lg border">
+                //    ${platform.image2 ? `
+                //      <button id="toggle-image-btn" title="Toggle image" class="text-blue-600 hover:text-blue-800 text-4xl">
+                //         🔄
+                //      </button>
+                //    ` : ''}
+                //  </div>
+                //`;
+               
+                //toggleButton.addEventListener('click', () => {
+                //  showingAlt = !showingAlt;
+                //  imageElement.src = showingAlt ? platform.image2 : platform.image1;
+                
+                //if (platform.image2) {
+                //  const imageElement = document.getElementById('platform-image');
+                //  const toggleButton = document.getElementById('toggle-image-btn');
+                //  let showingAlt = false;
+                  
+                //  toggleButton.addEventListener('click', () => {
+                //  imageElement.src = showingAlt ? platform.image1 : platform.image2;
+                //  showingAlt = !showingAlt;
+                //  });
+                //}
+                //
+               
+                //chartContainer.innerHTML = `
+                //  <div class="flex flex-col items-center space-y-4">
+                //    <img id="platform-image" src="${platform.image1 || platform.image}" alt="${platform.name}" class="w-full h-[32rem] object-contain rounded-lg border">
+                //    ${platform.image2 ? `
+                //      <div class="flex space-x-4">
+                //        <button id="image-btn-1" class="px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium">1</button>
+                //        <button id="image-btn-2" class="px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium">2</button>
+                //      </div>
+                //    ` : ''}
+                //  </div>
+                //`;
+                
+                //if (platform.image2) {
+                //  const imageElement = document.getElementById('platform-image');
+                //  const btn1 = document.getElementById('image-btn-1');
+                //  const btn2 = document.getElementById('image-btn-2');
+                //
+                //  btn1.addEventListener('click', () => {
+                //    imageElement.src = platform.image1;
+                //  });
+                //
+                //  btn2.addEventListener('click', () => {
+                //    imageElement.src = platform.image2;
+                //  });
+                //}
+                
+                //const chartContainer = document.getElementById('platform-chart-container'); // or wherever you're injecting
+                //const imageKeys = Object.keys(platform).filter(k => k.startsWith('image'));
+                
+                //chartContainer.innerHTML = `
+                //  <div class="flex flex-col items-center space-y-4">
+                //    <img id="platform-image" src="${platform.image1}" alt="${platform.name}" class="w-full h-[32rem] object-contain rounded-lg border">
+                //    <div class="flex space-x-4">
+                //      ${imageKeys.map((k, i) => `
+               //         <button data-image="${platform[k]}" class="image-btn px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium">${i + 1}</button>
+               //       `).join('')}
+               //     </div>
+              //    </div>
+              //  `;
+
+                //const imageElement = document.getElementById('platform-image');
+                //document.querySelectorAll('.image-btn').forEach(button => {
+                //  button.addEventListener('click', () => {
+                //    imageElement.src = button.dataset.image;
+                //  });
+                //});
+              
+                // Get all keys that start with "image" (image1, image2, image3, ...)
+                const imageKeys = Object.keys(platform).filter(k => k.startsWith('image'));
+                
+                // Render image and buttons
+                chartContainer.innerHTML = `
+                  <div class="flex flex-col items-center space-y-4">
+                    <img id="platform-image" src="${platform.image1 || platform.image}" alt="${platform.name}" class="w-full h-[32rem] object-contain rounded-lg border">
+                    ${imageKeys.length > 1 ? `
+                      <div class="flex space-x-4">
+                        ${imageKeys.map((k, i) => `
+                          <button data-image="${platform[k]}" class="image-btn px-3 py-1 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium">${i + 1}</button>
+                        `).join('')}
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+                
+                // Add event listeners to buttons
+                const imageElement = document.getElementById('platform-image');
+                document.querySelectorAll('.image-btn').forEach(button => {
+                  button.addEventListener('click', () => {
+                    imageElement.src = button.dataset.image;
+                  });
+                });
+    
+                platformChart.data.datasets[0].data = platform.scores;
+                platformChart.data.datasets[0].label = platform.name;
+                platformChart.update();
+            }
+
+            Object.keys(platformsData).forEach(key => {
+                const platform = platformsData[key];
+                const button = document.createElement('button');
+                button.textContent = platform.name;
+                button.dataset.platform = key;
+                button.className = 'platform-btn px-4 py-2 text-sm md:px-6 md:py-2.5 md:text-base font-semibold text-slate-600 bg-white rounded-lg shadow-sm hover:bg-slate-100 transition-all duration-300 border border-slate-200';
+                platformButtonsContainer.appendChild(button);
+                button.addEventListener('click', () => updatePlatformView(key));
+            });
+
+            const ctx = document.getElementById('platform-chart').getContext('2d');
+            platformChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Specialization', 'Collaboration', 'Scalability', 'Compliance', 'Ease of Transfer'],
+                    datasets: [{
+                        label: '',
+                        data: [],
+                        backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(37, 99, 235, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(37, 99, 235, 1)'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            pointLabels: {
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                backdropColor: 'rgba(255, 255, 255, 0.75)',
+                                stepSize: 2,
+                                font: { size: 10 }
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { size: 14, weight: 'bold' }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const repoFiltersContainer = document.getElementById('repo-filters');
+            const repositoriesGrid = document.getElementById('repositories-grid');
+            const repoTypes = ['all', ...new Set(repositoriesData.flatMap(r => r.type))];
+
+            repoTypes.forEach(type => {
+                const button = document.createElement('button');
+                button.textContent = type;
+                button.dataset.type = type;
+                button.className = 'repo-filter-btn px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200';
+                if (type === 'all') {
+                    button.classList.add('bg-blue-600', 'text-white');
+                } else {
+                    button.classList.add('bg-white', 'text-slate-600', 'hover:bg-blue-100');
+                }
+                repoFiltersContainer.appendChild(button);
+            });
+
+            function renderRepositories(filter = 'all') {
+                repositoriesGrid.innerHTML = '';
+                const filtered = filter === 'all' ? repositoriesData : repositoriesData.filter(r => Array.isArray(r.type) && r.type.includes(filter));
+                filtered.forEach(repo => {
+                    const card = document.createElement('div');
+                    card.className = 'repository-card bg-white p-5 rounded-lg shadow-md border border-slate-200 flex flex-col';
+                    card.innerHTML = `
+                        <h3 class="font-normal text-slate-600" style="font-size: 14px;">${repo.name}</h3>
+                        <div class="flex justify-start flex-wrap gap-1 text-blue-600 underline text-sm">${Array.isArray(repo.human_data) ? repo.human_data.map(link =>`<a href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join(', '): repo.human_data}</div>
+                        <div class="mt-4 pt-4 border-t border-slate-200 space-y-2 text-sm">
+                            <div class="flex justify-start"><div class="flex flex-wrap gap-1">${repo.type.map(tag => `<span class="text-blue-600 text-xs font-normal py-0.5 px-2 bg-blue-100 rounded-full mr-1">${tag}</span>`).join('')}</div></div>
+                        </div>
+                    `;
+                    repositoriesGrid.appendChild(card);
+                });
+            }
+
+            //<p class="mt-2 text-sm text-slate-500 flex-grow">${repo.description}</p>
+            //<div class="flex justify-between"><span class="font-semibold text-slate-700">Cost:</span> <span>${repo.cost}</span></div>
+            //<div class="flex justify-between"><span class="font-semibold text-slate-700">Identifier:</span> <span>${repo.pid}</span></div>
+
+            repoFiltersContainer.addEventListener('click', (e) => {
+                if (e.target.matches('.repo-filter-btn')) {
+                    document.querySelectorAll('.repo-filter-btn').forEach(btn => {
+                        btn.classList.remove('bg-blue-600', 'text-white');
+                        btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-blue-100');
+                    });
+                    e.target.classList.add('bg-blue-600', 'text-white');
+                    e.target.classList.remove('bg-white', 'text-slate-600');
+                    renderRepositories(e.target.dataset.type);
+                }
+            });
+
+            // LINK FROM AREAS TO PUBLICATIONS
+            function renderRepositoriesWithTag(tag, shouldScroll = true) {
+                // Always re-render
+                renderRepositories(tag);
+            
+                // Update button states
+                document.querySelectorAll('.repo-filter-btn').forEach(btn => {
+                    const isMatch = btn.dataset.type === tag;
+                    btn.classList.toggle('bg-blue-200', isMatch);
+                    btn.classList.toggle('text-blue-800', isMatch);
+                    btn.classList.toggle('bg-white', !isMatch);
+                    btn.classList.toggle('text-slate-600', !isMatch);
+                });
+            
+                // Optional: Scroll to section if requested
+                if (shouldScroll) {
+                    const section = document.getElementById('repositories');
+                    if (section) section.scrollIntoView({ behavior: 'smooth' });
+                }
+            
+                // Update URL hash so re-clicking links works
+                const newHash = `#repositories?filter=${encodeURIComponent(tag)}`;
+                history.replaceState(null, '', newHash);
+            }
+            
+            // Handle filter button clicks
+            repoFiltersContainer.addEventListener('click', (e) => {
+                if (e.target.matches('.repo-filter-btn')) {
+                    const tag = e.target.dataset.type;
+                    renderRepositoriesWithTag(tag);
+                }
+            });
+            
+            // Handle link-to-filter from other sections/pages
+            function applyFilterFromHash() {
+                const hash = window.location.hash;
+                if (hash.startsWith('#repositories?filter=')) {
+                    const tag = decodeURIComponent(hash.split('=')[1]);
+                    renderRepositoriesWithTag(tag);
+                } else {
+                    renderRepositoriesWithTag('all', false); // default view
+                }
+            }
+            
+            window.addEventListener('load', applyFilterFromHash);
+            window.addEventListener('hashchange', applyFilterFromHash);
+
+            const protocolStepper = document.getElementById('protocol-stepper');
+            protocolData.forEach((step, index) => {
+                const stepItem = document.createElement('div');
+                stepItem.className = 'step-item relative flex items-start pb-8';
+                if (index !== protocolData.length - 1) {
+                    stepItem.innerHTML += '<div class="absolute left-4 top-4 -ml-px mt-0.5 h-full w-0.5 bg-slate-300"></div>';
+                }
+                stepItem.innerHTML += `
+                    <div class="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border-2 border-slate-300 bg-white step-circle transition-colors duration-300">
+                        <span class="text-slate-300">${index + 1}</span>
+                    </div>
+                    <div class="ml-4 w-full">
+                        <h3 class="text-lg font-medium text-slate-700 step-title transition-colors duration-300 cursor-pointer">${step.title}</h3>
+                        <div class="step-content mt-2 text-slate-600 hidden">${step.content}</div>
+                    </div>
+                `;
+                protocolStepper.appendChild(stepItem);
+            });
+
+            protocolStepper.addEventListener('click', (e) => {
+                const title = e.target.closest('.step-title');
+                if (title) {
+                    const stepItem = title.closest('.step-item');
+                    const content = stepItem.querySelector('.step-content');
+                    const isActive = stepItem.classList.contains('active');
+                    
+                    document.querySelectorAll('.step-item').forEach(item => {
+                        item.classList.remove('active');
+                        item.querySelector('.step-content').classList.add('hidden');
+                    });
+
+                    if (!isActive) {
+                        stepItem.classList.add('active');
+                        content.classList.remove('hidden');
+                    }
+                }
+            });
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuOpenIcon = document.getElementById('menu-open-icon');
+            const menuCloseIcon = document.getElementById('menu-close-icon');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                menuOpenIcon.classList.toggle('hidden');
+                menuCloseIcon.classList.toggle('hidden');
+            });
+
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (!mobileMenu.classList.contains('hidden')) {
+                         mobileMenu.classList.add('hidden');
+                         menuOpenIcon.classList.remove('hidden');
+                         menuCloseIcon.classList.add('hidden');
+                    }
+                });
+            });
+            
+            const sections = document.querySelectorAll('main section');
+            const navItems = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 80) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navItems.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            updatePlatformView('dnanexus');
+            renderRepositories('all');
+            document.querySelector('.step-item').classList.add('active');
+            document.querySelector('.step-content').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>

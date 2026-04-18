@@ -101,7 +101,7 @@
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#home" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Home</a>
-                        <a href="#principles" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Research <br> themes</a>
+                        <a href="#themes" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Research <br> themes</a>
                         <a href="#platforms" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Projects</a>
                         <a href="#publications" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Publications</a>
                         <!-- New link -->
@@ -124,7 +124,7 @@
              <div class="md:hidden hidden" id="mobile-menu">
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                     <a href="#home" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Home</a>
-                    <a href="#principles" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Research <br> areas</a>
+                    <a href="#themes" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Research <br> areas</a>
                     <a href="#platforms" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Current <br> projects</a>
                     <a href="#publications" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Publications</a>
                     <!-- New link -->
@@ -149,13 +149,13 @@
             </div>
         </section>
 
-        <section id="principles" class="py-20 md:py-24">
+        <section id="themes" class="py-20 md:py-24">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
                     <h2 class="text-3xl font-bold text-slate-900">Research themes</h2>
                     <p class="mt-4 max-w-2xl mx-auto text-slate-600">We work on a wide range of themes within social evolution and behavioral ecology.</p>
                 </div>
-                <div id="principles-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div id="themes-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                 </div>
             </div>
         </section>
@@ -333,7 +333,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             
-            const principlesData = [
+            const themesData = [
                 {
                     icon: '🐜',
                     title: 'Altruism',
@@ -622,8 +622,8 @@
                 }
             ];
 
-            const principlesGrid = document.getElementById('principles-grid');
-            principlesData.forEach(p => {
+            const themesGrid = document.getElementById('themes-grid');
+            themesData.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'principle-card bg-white p-6 rounded-lg shadow-md cursor-pointer';
                 card.innerHTML = `
@@ -635,10 +635,10 @@
                     <div class="mt-4 text-sm text-slate-500 font-medium text-blue-600">Learn More →</div>
                     <div class="long-desc hidden mt-4 text-slate-600 text-sm">${p.long}</div>
                   `;
-                principlesGrid.appendChild(card);
+                themesGrid.appendChild(card);
             });
             
-            principlesGrid.addEventListener('click', (e) => {
+            themesGrid.addEventListener('click', (e) => {
                 const card = e.target.closest('.principle-card');
                 if (card) {
                     const shortDesc = card.querySelector('p');

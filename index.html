@@ -102,7 +102,7 @@
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#home" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Home</a>
                         <a href="#themes" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Research <br> themes</a>
-                        <a href="#platforms" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Projects</a>
+                        <a href="#projects" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Projects</a>
                         <a href="#publications" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">Publications</a>
                         <!-- New link -->
                         <a href="#pi" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-blue-600 border-b-2 border-transparent">PI</a>
@@ -125,7 +125,7 @@
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                     <a href="#home" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Home</a>
                     <a href="#themes" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Research <br> areas</a>
-                    <a href="#platforms" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Current <br> projects</a>
+                    <a href="#projects" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Current <br> projects</a>
                     <a href="#publications" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">Publications</a>
                     <!-- New link -->
                     <a href="#pi" class="block nav-link px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100">PI</a>
@@ -160,7 +160,7 @@
             </div>
         </section>
 
-        <section id="platforms" class="py-20 md:py-24 bg-white">
+        <section id="projects" class="py-20 md:py-24 bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
                     <h2 class="text-3xl font-bold text-slate-900">Projects</h2>
@@ -360,7 +360,7 @@
                 }
             ];
 
-            const platformsData = {
+            const projectsData = {
                 dnanexus: {
                     name: 'Cooperative breeding',
                     image1: 'image1a.png',
@@ -650,12 +650,12 @@
                 }
             });
             
-            const platformButtonsContainer = document.querySelector('#platforms .flex');
+            const platformButtonsContainer = document.querySelector('#projects .flex');
             const platformDetailsContainer = document.getElementById('platform-details');
             let platformChart;
 
             function updatePlatformView(platformKey) {
-                const platform = platformsData[platformKey];
+                const platform = projectsData[platformKey];
                 
                 document.querySelectorAll('.platform-btn').forEach(btn => btn.classList.remove('active'));
                 document.querySelector(`[data-platform="${platformKey}"]`).classList.add('active');
@@ -712,8 +712,8 @@
                 platformChart.update();
             }
 
-            Object.keys(platformsData).forEach(key => {
-                const platform = platformsData[key];
+            Object.keys(projectsData).forEach(key => {
+                const platform = projectsData[key];
                 const button = document.createElement('button');
                 button.textContent = platform.name;
                 button.dataset.platform = key;

@@ -815,7 +815,7 @@
                     card.className = 'publication-card bg-white p-5 rounded-lg shadow-md border border-slate-200 flex flex-col';
                     card.innerHTML = `
                         <h3 class="font-normal text-slate-600" style="font-size: 14px;">${pub.name}</h3>
-                        <div class="flex justify-start flex-wrap gap-1 text-blue-600 underline text-sm">${Array.isArray(pub.human_data) ? pub.human_data.map(link =>`<a href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join(', '): pub.human_data}</div>
+                        <div class="flex justify-start flex-wrap gap-1 text-[#9b2335] underline text-sm">${Array.isArray(pub.human_data) ? pub.human_data.map(link =>`<a href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join(', '): pub.human_data}</div>
                         <div class="mt-4 pt-4 border-t border-slate-200 space-y-2 text-sm">
                             <div class="flex justify-start"><div class="flex flex-wrap gap-1">${pub.type.map(tag => `<span class="text-[#500000] text-xs font-normal py-0.5 px-2 bg-[#fff1f1] rounded-full mr-1">${tag}</span>`).join('')}</div></div>
                         </div>

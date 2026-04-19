@@ -709,6 +709,7 @@
                           </li>
                         `).join('')}
                        </ul>
+                       ${platform.caption ? `<p class="text-xs text-slate-400 mt-3">${platform.caption}</p>` : ''}
                 `;
                 
                 // const chartContainer = document.querySelector('.chart-container'); chartContainer.innerHTML = `<img src="${platform.image}" alt="${platform.name}" class="w-[200px] rounded-lg border">`
@@ -721,7 +722,6 @@
                 chartContainer.innerHTML = `
                   <div class="flex flex-col items-center space-y-4">
                     <img id="platform-image" src="${platform.image1 || platform.image}" alt="${platform.name}" class="w-full h-[32rem] object-contain rounded-lg border">
-                    ${platform.caption ? `<p class="text-xs text-slate-400 text-center mt-1">${platform.caption}</p>` : ''}
                     ${imageKeys.length > 1 ? `
                       <div class="flex space-x-4">
                         ${imageKeys.map((k, i) => `

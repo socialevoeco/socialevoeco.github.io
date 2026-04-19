@@ -144,7 +144,7 @@
                     I study how organisms adapt to their environment by examining the ecological, demographic, and genetic factors that shape social and life-history traits. My research integrates biological insights with theoretical modelling. Using a diverse range of modelling approaches, including kin selection, game theory, population genetics, and individual-based simulations, I explore the underlying principles that drive adaptive evolution across species and ecological communities. My research involves designing both general models that identify fundamental selection pressures operating in populations and tailored models to study specific biological systems. My work spans a broad range of taxonomic groups, from viruses and bacteria to fungi, insects, birds, and mammals. I aim to develop a comprehensive understanding of how adaptive evolution operates across different levels of biological organisation and how organisms respond to environmental variation.
                 </p>
                 <div class="mt-10 text-center">
-                    <a href="https://eccb.tamu.edu/people/rodrigues-antonio-m-m/" target="_blank" rel="noopener"  class="bg-neutral-100 text-gray-600 font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-blue-300 transition-all duration-300">My webpage at TAMU</a>
+                    <a href="https://eccb.tamu.edu/people/rodrigues-antonio-m-m/" target="_blank" rel="noopener"  class="bg-neutral-100 text-gray-600 font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-[#fff1f1] transition-all duration-300">My webpage at TAMU</a>
                 </div>
             </div>
         </section>
@@ -182,7 +182,7 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-8">
                     <h2 class="text-3xl font-bold text-slate-900">Publications</h2>
-                    <p class="mt-4 max-w-3xl mx-auto text-slate-600">A complete list of publications can be found <a href="publications.html" class="text-blue-600 underline hover:text-blue-800">here</a>.</p>
+                    <p class="mt-4 max-w-3xl mx-auto text-slate-600">A complete list of publications can be found <a href="publications.html" class="text-[#500000] underline hover:text-[#6b0000]">here</a>.</p>
                 </div>
                 <div class="flex justify-center flex-wrap gap-2 md:gap-4 mb-10" id="pub-filters">
                 </div>
@@ -817,7 +817,7 @@
                         <h3 class="font-normal text-slate-600" style="font-size: 14px;">${pub.name}</h3>
                         <div class="flex justify-start flex-wrap gap-1 text-blue-600 underline text-sm">${Array.isArray(pub.human_data) ? pub.human_data.map(link =>`<a href="${link.url}" target="_blank" rel="noopener">${link.label}</a>`).join(', '): pub.human_data}</div>
                         <div class="mt-4 pt-4 border-t border-slate-200 space-y-2 text-sm">
-                            <div class="flex justify-start"><div class="flex flex-wrap gap-1">${pub.type.map(tag => `<span class="text-blue-600 text-xs font-normal py-0.5 px-2 bg-blue-100 rounded-full mr-1">${tag}</span>`).join('')}</div></div>
+                            <div class="flex justify-start"><div class="flex flex-wrap gap-1">${pub.type.map(tag => `<span class="text-[#500000] text-xs font-normal py-0.5 px-2 bg-[#fff1f1] rounded-full mr-1">${tag}</span>`).join('')}</div></div>
                         </div>
                     `;
                     publicationsGrid.appendChild(card);
@@ -831,10 +831,10 @@
             pubFiltersContainer.addEventListener('click', (e) => {
                 if (e.target.matches('.pub-filter-btn')) {
                     document.querySelectorAll('.pub-filter-btn').forEach(btn => {
-                        btn.classList.remove('bg-blue-100', 'text-blue-600');
-                        btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-blue-100');
+                        btn.classList.remove('bg-[#fff1f1]', 'text-[#500000]');
+                        btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-[#fff1f1]');
                     });
-                    e.target.classList.add('bg-blue-100', 'text-blue-600');
+                    e.target.classList.add('bg-[#fff1f1]', 'text-[#500000]');
                     e.target.classList.remove('bg-white', 'text-slate-600');
                     renderPublications(e.target.dataset.type);
                 }
@@ -847,16 +847,16 @@
             
               // 2) Reset all buttons to INACTIVE
               document.querySelectorAll('.pub-filter-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-100', 'text-blue-600', 'bg-blue-200', 'text-blue-800');
-                btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-blue-100');
+                btn.classList.remove('bg-[#fff1f1]', 'text-[#500000]', 'bg-blue-200', 'text-blue-800');
+                btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-[#fff1f1]');
               });
             
               // 3) Activate the CURRENT button
               const activeBtn = Array.from(document.querySelectorAll('.pub-filter-btn'))
                 .find(b => b.dataset.type === tag);
               if (activeBtn) {
-                activeBtn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-blue-100');
-                activeBtn.classList.add('bg-blue-100', 'text-blue-600');
+                activeBtn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-[#fff1f1]');
+                activeBtn.classList.add('bg-[#fff1f1]', 'text-[#500000]');
               }
             
               // 4) Optional scroll

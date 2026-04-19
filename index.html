@@ -393,6 +393,7 @@
                     image1: 'image1a.png',
                     image2: 'image1b.png',
                     image3: 'image1c.png',
+                    caption: 'Photo: © S. T. Cook / Wikimedia Commons (CC BY 2.0)',
                     summary: 'Rodrigues, A. M. M., Riehl C. 2025. <strong>The evolution of cooperative breeding in family groups: when should parents tolerate unhelpful helpers?</strong> Philosophical Transactions of the Royal Society B, 380: 20230275. <a href="https://doi.org/10.1098/rstb.2023.0275" target="_blank" rel="noopener" class="text-[#9b2335] underline">doi</a>',
                     //summary: 'Rodrigues, A. M. M., Riehl C. 2025. <a href="https://doi.org/10.1098/rstb.2023.0275" target="_blank" rel="noopener" class="text-blue-600 underline">The evolution of cooperative breeding in family groups: when should parents tolerate unhelpful helpers?</a> Philosophical Transactions of the Royal Society B, 380: 20230275.',
                     //summary: 'Rodrigues, A. M. M., Riehl C. 2025. <strong>The evolution of cooperative breeding in family groups: when should parents tolerate unhelpful helpers?</strong> <em>Philosophical Transactions of the Royal Society B</em>, 380: 20230275.',
@@ -720,6 +721,7 @@
                 chartContainer.innerHTML = `
                   <div class="flex flex-col items-center space-y-4">
                     <img id="platform-image" src="${platform.image1 || platform.image}" alt="${platform.name}" class="w-full h-[32rem] object-contain rounded-lg border">
+                    ${platform.caption ? `<p class="text-xs text-slate-400 text-center mt-1">${platform.caption}</p>` : ''}
                     ${imageKeys.length > 1 ? `
                       <div class="flex space-x-4">
                         ${imageKeys.map((k, i) => `
